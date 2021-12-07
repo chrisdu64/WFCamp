@@ -18,8 +18,8 @@ Mettre en place un système d'authentification des utilisateurs via une interfac
 
 ### Logique Métier du projet :
 
-    - Authentification & Page de profil (qui permet d'afficher les infos/posts de l'utilisateur)
     - CRUD sur les posts (soumis à autorisation)
+    - Authentification & Page de profil (qui permet d'afficher les infos/posts de l'utilisateur)
     - Système de rôles d'utilisateurs (Utilisateurs & Admin)
     - Les admins ont accès à un panel administrateur
     - Upload de fichiers

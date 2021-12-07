@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PostController!
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des posts</h1>
+
+	{% for post in posts %}
+		<h3>{{ post.content }}</h3>
+		<p>
+			<small>
+				crée le
+				{{ post.createdAt | date('d/m/Y à H:i:s') }}
+			</small>
+		</p>
+	{% endfor %}
+
+	<h3>{{ resultat }}</h3>
+	<h3>{{ phrase }}</h3>
+{% endblock %}
