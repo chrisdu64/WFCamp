@@ -4,18 +4,18 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Liste des posts</h1>
+	<h1>Liste des posts :</h1>
 
 	{% for post in posts %}
+	<div class="border border-secondary rounded my-4 p-3 flex">
 		<h3>{{ post.content }}</h3>
 		<p>
 			<small>
-				crée le
+				créé le
 				{{ post.createdAt | date('d/m/Y à H:i:s') }}
 			</small>
 		</p>
+		<a class="btn btn-secondary" href={{ path('app_post_details', {'id':post.id})}}>Details</a>
+	</div>
 	{% endfor %}
-
-	<h3>{{ resultat }}</h3>
-	<h3>{{ phrase }}</h3>
 {% endblock %}

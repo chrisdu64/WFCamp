@@ -9,9 +9,7 @@
 	<div>
 		{{ form_start(form) }}
 		{{ form_row(form.content, {'attr': {'class': 'foo'}}) }}
-		{{ form_widget(form.createdAt, {'attr': {'class': 'bar'}}) }}
-		{{ form_widget(form.updatedAt, {'attr': {'class': 'baz'}}) }}
-		<button type="submit">Créer</button>
+		<button type="submit">{{ action }}</button>
 		{{ form_end(form) }}
 	</div>
 
