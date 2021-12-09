@@ -16,6 +16,12 @@
 			</small>
 		</p>
 		<a class="btn btn-secondary" href={{ path('app_post_details', {'id':post.id})}}>Details</a>
+		<form class="btn" method="post" action={{ path('app_post_delete', {'id':post.id})}} >
+		<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id)}} >
+		<button type="submit">
+		<i class="fas fa-trash"></i>
+		</button>
+		</form>
 	</div>
 	{% endfor %}
 {% endblock %}

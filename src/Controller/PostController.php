@@ -25,7 +25,7 @@ class PostController extends AbstractController
         return $this->render('post/index.html.twig', ['posts' => $arrayPosts]);
     }
 
-    #[Route('/post/{id<\d+>}', name: 'app_post_details')]
+    #[Route('/post/{id<\d+>}', name: 'app_post_details',  methods : ['GET'])]
 
     public function details(Post $post): Response
     {
@@ -65,4 +65,17 @@ class PostController extends AbstractController
         return $this->renderForm('post/create.html.twig', ['form' => $formulaire, 'action' => 'Mettre à jour']);
     }
 
+    #[Route('/post/{id<\d+>}', name: 'app_post_delete', methods : ['POST'])]
+    public function delete(Request $request, Post $post, EntityManagerInterface $em): Response
+    {
+        if($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token')))
+        {
+            $em->remove($post);
+            $em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('post/delete.html.twig');
+    }
 }
