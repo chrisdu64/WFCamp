@@ -47,7 +47,7 @@ Mettre en place un système d'authentification des utilisateurs via une interfac
         "id":"int pk",
         "content": "text,400",
         "media": "string",
-        "author":"relation w/ User",
+        "user":"relation w/ User",
         "likes" : "relation w/ Users",
         "comments" : "relation w/ Comments",
         "createdAt" : "datetime",

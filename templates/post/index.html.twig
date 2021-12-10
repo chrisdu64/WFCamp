@@ -4,24 +4,31 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Liste des posts :</h1>
+	<h1 class="text-center mt-3">Liste des posts :</h1>
 
 	{% for post in posts %}
-	<div class="border border-secondary rounded my-4 p-3 flex">
-		<h3>{{ post.content }}</h3>
+	<div class="border border-secondary rounded my-4 p-3 flex bg-light text-dark w-50 mx-auto">
+		<h3>{{ post.user.username }}</h3>
+		<h3 class="text-center">{{ post.content }}</h3>
 		<p>
 			<small>
 				créé le
 				{{ post.createdAt | date('d/m/Y à H:i:s') }}
 			</small>
 		</p>
-		<a class="btn btn-secondary" href={{ path('app_post_details', {'id':post.id})}}>Details</a>
-		<form class="btn" method="post" action={{ path('app_post_delete', {'id':post.id})}} >
-		<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id)}} >
-		<button type="submit">
-		<i class="fas fa-trash"></i>
-		</button>
+		<div class="d-flex justify-content-between">
+		<a class="btn btn-secondary" href={{ path('app_post_details', {'id':post.id})}}><i class="far fa-comment-dots"></i></a>
+		{% if app.user %}
+			{% if app.user is same as(post.user) %}
+					<a class="btn btn-warning" href={{ path('app_post_edit', {'id':post.id})}}><i class="fas fa-wrench"></i></a>
+
+		<form class="btn btn-danger" method="post" action={{ path('app_post_delete', {'id':post.id})}} >
+			<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id)}} >
+			<button class="btn-danger " type="submit"><i class="fas fa-trash"></i></button>
 		</form>
+			{% endif %}
+		{% endif %}
+		</div>
 	</div>
 	{% endfor %}
 {% endblock %}

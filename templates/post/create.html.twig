@@ -4,9 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Création de posts</h1>
+	<h1 class="text-center mt-3">Création de posts :</h1>
 
-	<div>
+	<div class="w-75 mx-auto" >
 		{{ form_start(form) }}
 		{{ form_row(form.content, {'attr': {'class': 'foo'}}) }}
 		<button type="submit">{{ action }}</button>
