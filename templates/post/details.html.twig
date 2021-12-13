@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}WF Camp !
+{% endblock %}
+
+{% block body %}
+	{# Post Section #}
+	{% block post %}
+		<div class="card border-secondary my-3">
+			<div class="card-header">
+				@{{post.user.username}}
+			</div>
+			<div class="card-body">
+				<p class="card-text">
+					{{ post.content }}</p>
+
+			</div>
+			<div class="card-footer text-muted ">
+				<a href="#" class="btn btn-light">
+					<i class="far fa-heart"></i>
+				</a>
+				{% if app.user %}
+					{% if app.user is same as(post.user) %}
+						<a href={{ path('app_post_edit',{'id': post.id} ) }} class="btn btn-warning">
+							<i class="fas fa-wrench"></i>
+						</a>
+						<form method="post" action={{ path('app_post_delete', {'id' : post.id} ) }} class="btn btn-danger">
+							<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id) }}>
+							<button type="submit">
+								<i class="far fa-trash-alt"></i>
+							</button>
+						</form>
+					{% endif %}
+				{% endif %}
+				<span>
+					{{ post.createdAt | date('d/m/Y') }}</span>
+			</div>
+		</div>
+	{% endblock %}
+	{% block comments %}
+		<div class="card border-success bg-dark my-3">
+			{% if app.user %}
+				<div class="card" contenteditable="true">
+					FORM ICI
+				</div>
+			{% else %}
+				<div class="card mt-3 p-3" contenteditable="true">
+					<div class="card-text">
+						Vous devez être connectés pour poster des commentaire.
+					</div>
+				</div>
+			{% endif %}
+			<div class="card border-warning m-3 p-3">
+				<div class="card-header">
+					@{{post.user.username}}
+				</div>
+				<div class="card-body">
+					<p class="card-text">
+						{{ post.content }}</p>
+
+				</div>
+				<div class="card-footer text-muted ">
+					{% if app.user %}
+						{% if app.user is same as(post.user) %}
+							<a href={{ path('app_post_edit',{'id': post.id} ) }} class="btn btn-warning">
+								<i class="fas fa-wrench"></i>
+							</a>
+							<form method="post" action={{ path('app_post_delete', {'id' : post.id} ) }} class="btn btn-danger">
+								<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id) }}>
+								<button type="submit">
+									<i class="far fa-trash-alt"></i>
+								</button>
+							</form>
+						{% endif %}
+					{% endif %}
+					<span>
+						{{ post.createdAt | date('d/m/Y') }}</span>
+				</div>
+			</div>
+		</div>
+
+	{% endblock %}
+{% endblock %}
+
