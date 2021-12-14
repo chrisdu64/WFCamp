@@ -111,4 +111,45 @@ class PostController extends AbstractController
         }
         return $this->redirectToRoute('app_home');
     }
+
+    #[Route('/like/{id}', name: 'app_post_like')]
+    #[IsGranted('ROLE_USER', message: 'You need to be logged-in to access this resource')]
+    public function like(Post $post, Security $security, EntityManagerInterface $em): Response
+    {
+        $user = $security->getUser();
+        //? Si mon user a déja liké le post, alors il fait parti de l'array qui contient les post.
+        if ($post->getLikes()->contains($user)) {
+            //? Il faut l'en enlever
+            $post->removeLike($user);
+            $em->flush();
+
+            return $this->redirectToRoute('app_post_details', ['id' => $post->getId()]);
+        }
+        //? Sinon il faut le rajouter
+        $post->addLike($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_post_details', ['id' => $post->getId()]);
+    }
+
+    #[Route('/like/{id}/home', name: 'app_post_likehome')]
+    #[IsGranted('ROLE_USER', message: 'You need to be logged-in to access this resource')]
+    public function likeFromHome(Post $post, Security $security, EntityManagerInterface $em): Response
+    {
+        $user = $security->getUser();
+        //? Si mon user a déja liké le post, alors il fait parti de l'array qui contient les post.
+        if ($post->getLikes()->contains($user)) {
+            //? Il faut l'en enlever
+            $post->removeLike($user);
+            $em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+        //? Sinon il faut le rajouter
+        $post->addLike($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
 }
