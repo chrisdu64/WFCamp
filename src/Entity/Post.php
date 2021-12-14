@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @Vich\Uploadable
  */
 class Post
 {
@@ -52,6 +55,22 @@ class Post
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="post", orphanRemoval=true)
      */
     private $comments;
+
+    /**
+     * NOTE: This is not a mapped field of entity metadata, just a simple property.
+     * 
+     * @Vich\UploadableField(mapping="post_media", fileNameProperty="mediaName")
+     * 
+     * @var File|null
+     */
+    private $mediaFile;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string|null
+     */
+    private $mediaName;
 
     public function __construct()
     {
@@ -156,5 +175,45 @@ class Post
         }
 
         return $this;
+    }
+
+    /**
+     * Get the value of mediaName
+     *     
+     */ 
+    public function getMediaName(): ?string
+    {
+        return $this->mediaName;
+    }
+
+    /**
+     * Set the value of mediaName
+     */ 
+    public function setMediaName(?string $mediaName): self
+    {
+        $this->mediaName = $mediaName;
+
+        return $this;
+    }
+
+    /**
+     * Get nOTE: This is not a mapped field of entity metadata, just a simple property.
+     */ 
+    public function getMediaFile(): ?File
+    {
+        return $this->mediaFile;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */ 
+    public function setMediaFile(?File $mediaFile = null): void
+    {
+        $this->mediaFile = $mediaFile;
+
+        if($mediaFile !== null){
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+       
     }
 }

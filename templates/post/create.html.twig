@@ -8,8 +8,8 @@
 
 	<div class="w-75 mx-auto" >
 		{{ form_start(form) }}
-		{{ form_row(form.content, {'attr': {'class': 'foo'}}) }}
-		<button type="submit">{{ action }}</button>
+		{{ form_row(form, {'attr': {'class': 'border-4'}}) }}
+		<button type="submit" class="btn btn-secondary">{{ action }}</button>
 		{{ form_end(form) }}
 	</div>
 
