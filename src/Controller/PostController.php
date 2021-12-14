@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,20 +22,33 @@ class PostController extends AbstractController
     {
         
 
-        $arrayPosts = $postRepo->findAll();
+        $arrayPosts = $postRepo->findBy([], ['createdAt' => 'DESC']);
 
         // dd($arrayPosts);
 
         return $this->render('post/index.html.twig', ['posts' => $arrayPosts]);
     }
 
-    #[Route('/post/{id<\d+>}', name: 'app_post_details',  methods : ['GET'])]
+    #[Route('/post/{id<\d+>}', name: 'app_post_details',  methods : ['GET|POST'])]
 
-    public function details(Post $post): Response
+    public function details(Post $post, Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        dd($post);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $user = $security->getUser();
+            $comment->setUser($user);
 
-        return $this->render('post/index.html.twig', []);
+            $post->addComment($comment);
+            $em->persist($comment);
+            $em->flush();
+        }
+
+        $comments = $post->getComments();
+
+        return $this->renderForm('post/details.html.twig', ['post' => $post, 'comments' => $comments, 'form' => $form]);
     }
 
     
@@ -77,7 +92,7 @@ class PostController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/post/{id<\d+>}', name: 'app_post_delete', methods : ['POST'])]
+    #[Route('/post/delete/{id<\d+>}', name: 'app_post_delete', methods : ['POST'])]
     #[IsGranted('ROLE_USER', message: 'You need to be logged-in to access this resource')]
     public function delete(Request $request, Post $post, EntityManagerInterface $em, Security $security): Response
     {

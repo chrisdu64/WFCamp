@@ -38,10 +38,14 @@
 		</div>
 	{% endblock %}
 	{% block comments %}
-		<div class="card border-success bg-dark my-3">
+		<div class="card border-success my-3">
 			{% if app.user %}
-				<div class="card" contenteditable="true">
-					FORM ICI
+				<div class="card border-secondary m-3 p-3 text-center text-muted">
+						{{ form_start(form) }}
+							{{ form_widget(form.content) }}
+							<button type="submit" class="btn btn-secondary"> Comment
+							<i class="far fa-comment-dots"></i></button>
+						{{ form_end(form) }}
 				</div>
 			{% else %}
 				<div class="card mt-3 p-3" contenteditable="true">
@@ -50,35 +54,26 @@
 					</div>
 				</div>
 			{% endif %}
-			<div class="card border-warning m-3 p-3">
-				<div class="card-header">
-					@{{post.user.username}}
+			{% if comments is empty %}
+				<div class="card border-warning m-3 p-3 text-center text-muted">
+					<img src="https://www.vhv.rs/dpng/d/553-5530609_vector-camping-camping-free-vectors-download-camping-icon.png" alt="empty camp" class="img-thumbnail rounded mx-auto d-block" style="height:200px;width:200px;">
+					<div class="card-text">
+						<p>No comment yet, be the first to comment !</p>
+					</div>
 				</div>
-				<div class="card-body">
-					<p class="card-text">
-						{{ post.content }}</p>
-
-				</div>
-				<div class="card-footer text-muted ">
-					{% if app.user %}
-						{% if app.user is same as(post.user) %}
-							<a href={{ path('app_post_edit',{'id': post.id} ) }} class="btn btn-warning">
-								<i class="fas fa-wrench"></i>
-							</a>
-							<form method="post" action={{ path('app_post_delete', {'id' : post.id} ) }} class="btn btn-danger">
-								<input type="hidden" name="_token" value={{ csrf_token('delete' ~ post.id) }}>
-								<button type="submit">
-									<i class="far fa-trash-alt"></i>
-								</button>
-							</form>
-						{% endif %}
-					{% endif %}
-					<span>
-						{{ post.createdAt | date('d/m/Y') }}</span>
-				</div>
-			</div>
+			{% else %}
+				{% for comment in comments %}
+					<div class="card border-warning m-3 p-3">
+						<div class="card-header">
+							@{{comment.user.username}} - {{ comment.createdAt | date('d/m/Y') }}
+						</div>
+						<div class="card-body">
+							<p class="card-text">
+								{{ comment.content }}</p>
+						</div>
+					</div>
+				{% endfor %}
+		{% endif %}			
 		</div>
-
-	{% endblock %}
-{% endblock %}
+	{% endblock %}{% endblock %}
 
